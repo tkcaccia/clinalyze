@@ -16,6 +16,7 @@ txtsummary(x,
 
 \arguments{
   \item{x}{a numeric vector.}
+  \item{f}{xxx.}
   \item{digits}{how many significant digits are to be used.}
   \item{scientific}{either a logical specifying whether result should be encoded in scientific format.}
   \item{range}{the range to be visualized.}
