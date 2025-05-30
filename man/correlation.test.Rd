@@ -32,9 +32,9 @@ correlation.test (x,
   \seealso{\code{\link{categorical.test}},\code{\link{continuous.test}}, \code{\link{txtsummary}}}
 
 \examples{
-data(clinical)
+data(prostate)
 
-correlation.test(clinical[,"Age"],clinical[,"BMI"],name="correlation between Age and BMI")
+correlation.test(prostate[,"Age"],prostate[,"BMI"],name="correlation between Age and BMI")
 
 }
 \keyword{correlation.test}
