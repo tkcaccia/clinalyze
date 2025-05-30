@@ -33,7 +33,7 @@ frequency_matching (data,label,times=5,seed=1234)
 
 
 \examples{
-
+data(prostate)
 
 hosp=prostate[,"Hospital"]
 gender=prostate[,"Gender"]
