@@ -17,27 +17,16 @@ vignette: >
 ---
 
 
-## 1  Introduction
+# Introduction
 
-KODAMA (Knowledge Discovery by Accuracy Maximization) is a novel learning algorithm for unsupervised feature extraction, specifically designed for analysing noisy and high-dimensional data sets (Cacciatore \emph{et al.}, 2014).The core idea of the original algorithm is to use an iteration procedure to produce a hypothetical classification through maximization of cross-validated predictive accuracy. Using only the data set as input (no \emph{a priori} knowledge is needed), an iterative procedure permits classification with a high cross-validated accuracy.
-Two different classifiers are implemented in this package for the computation of cross-validated predictive accuracy: \emph{k}-nearest neighbors (\emph{k}NN) and Partial Least Squares - Discriminant Analysis (PLS-DA). This procedure is repeated several times to average the effects owing to the randomness of the iterative procedure. After each run of the procedure, a classification vector with high cross-validated accuracy is obtained. KODAMA subsequently collects and processes these results by constructing a dissimilarity matrix to provide a holistic view of the data.
-This documentation introduces the usage of KODAMA. 
-
+The `clinical` package is designed to facilitate exploratory data analysis and statistical testing on clinical datasets. This vignette presents the full usage of all core functions included in the package.
 
  
 ## 2	Installation
 
 ### 2.1 Installation via CRAN
 
-The R package KODAMA (current version 1.1) is part of the Comprehensive R Archive Network (CRAN)^[https://cran.r-project.org/]. The simplest way to install the package is to enter the following command into your R session: `install.packages("KODAMA")`. We suggest to install the R package `rgl` for the data visualization in 3D interactive plots.
-
-### 2.2 Manual installation from source
-
-To compile the C/C++ code included in the package for customization or installation on alternative operating systems the package can be manually installed from source. To this end, open the package's page at CRAN (Cacciatore \emph{et al.}, 2014) and then proceed as follows:
-
-- Download clinical.tar.gz and save it to your hard disk
-- Open a shell/terminal/command prompt window and change to the desired directory for installation of KODAMA.tar.gz. Enter `R CMD INSTALL KODAMA.tar.gz` to install the package.
-Note that this may require additional software on some platforms. Windows requires Rtools^[https://developer.apple.com/xcode/] to be installed and to be available in the default search path (environment variable PATH). MAC OS X requires installation of Xcode developers and command line tools.
+The R package clinical  is part of the Comprehensive R Archive Network (CRAN)^[https://cran.r-project.org/]. The simplest way to install the package is to enter the following command into your R session: `install.packages("clinical")`. We suggest to install the R package `rgl` for the data visualization in 3D interactive plots.
 
 
 ### 2.3 Compatibility issues
@@ -50,17 +39,115 @@ To load the package, enter the following instruction in your R session:
 
     library("clinical")
 
-If this command terminates without any error messages, you can be sure that the package has been installed successfully. The KODAMA package is now ready for use.
+If this command terminates without any error messages, you can be sure that the package has been installed successfully. The clinical package is now ready for use.
 
-The package includes both a user manual (this document) and a reference manual (help pages for each function). To view the user manual, enter `vignette("KODAMA")`. Help pages can be viewed using the help command `help(package="KODAMA")`.
+The package includes both a user manual (this document) and a reference manual (help pages for each function). To view the user manual, enter `vignette("clinical")`. Help pages can be viewed using the help command `help(package="clinical")`.
 
- \newpage
- 
-## 4  Datasets 
 
-### 4.1 Swiss Roll
 
-The function `swissroll` computes the Swiss Roll dataset of a given sample size. The following example computes a Swiss Roll dataset containing 1,000 samples.
 
-    data(prostate)
+# Simulated Data
 
+```{r}
+set.seed(123)
+n <- 100
+data <- data.frame(
+  Age = rnorm(n, mean = 60, sd = 10),
+  BMI = rnorm(n, mean = 25, sd = 4),
+  Gender = sample(c("Male", "Female"), n, replace = TRUE),
+  Hospital = sample(c("A", "B"), n, replace = TRUE),
+  Diagnosis = sample(c("Low", "Medium", "High"), n, replace = TRUE)
+)
+```
+
+# Function: `as.data.matrix`
+
+Converts a character or factor matrix into a numeric matrix while preserving row and column names.
+
+```{r}
+numeric_matrix <- as.data.matrix(data[, c("Age", "BMI")])
+head(numeric_matrix)
+```
+
+# Function: `txtsummary`
+
+Returns a textual summary of a numeric vector using either the mean or median and a measure of variability.
+
+```{r}
+txtsummary(data$Age, f = "mean", digits = 2, range = "IQR")
+```
+
+# Function: `continuous.test`
+
+Performs a statistical comparison of a continuous variable across groups.
+
+```{r}
+continuous_test_result <- continuous.test("Age", data$Age, data$Hospital, center = "mean", range = "sd")
+print(continuous_test_result)
+```
+
+# Function: `categorical.test`
+
+Performs a Fisher's exact test or chi-square test on a categorical variable across groups and returns formatted output.
+
+```{r}
+categorical_test_result <- categorical.test("Gender", data$Gender, data$Hospital)
+print(categorical_test_result)
+```
+
+# Function: `correlation.test`
+
+Computes Pearson, Spearman, or MINE correlation between two numeric vectors.
+
+```{r}
+correlation_result <- correlation.test(data$Age, data$BMI, method = "spearman", name = "Age vs BMI")
+print(correlation_result)
+```
+
+# Function: `multi_analysis`
+
+Applies a test (continuous or correlation) across multiple features of a dataset.
+
+```{r}
+multi_cont <- multi_analysis(data[, c("Age", "BMI")], data$Hospital, FUN = "continuous.test")
+print(multi_cont)
+```
+
+```{r}
+multi_corr <- multi_analysis(data[, c("Age", "BMI")], data$BMI, FUN = "correlation.test")
+print(multi_corr)
+```
+
+# Function: `multi_test`
+
+Runs either `continuous.test` or `categorical.test` automatically on each column depending on the data type.
+
+```{r}
+multi_test_result <- multi_test(data[, c("Age", "BMI", "Gender")], data$Hospital)
+print(multi_test_result)
+```
+
+# Function: `intersect`
+
+Finds the intersection of multiple vectors.
+
+```{r}
+v1 <- c("A", "B", "C")
+v2 <- c("B", "C", "D")
+v3 <- c("C", "B", "E")
+
+intersect(v1, v2, v3)
+```
+
+# Function: `frequency_matching`
+
+Matches samples across classes (e.g., control vs case) by discretizing numeric features into bins and stratifying selection.
+
+```{r}
+match_result <- frequency_matching(data[, c("Age", "BMI")], label = data$Hospital)
+head(match_result$data)
+```
+
+# Conclusion
+
+The `clinical` package provides an extensive toolkit for evaluating clinical datasets, from statistical comparisons to frequency matching and summarization. This vignette serves as a comprehensive guide for using each function effectively.
