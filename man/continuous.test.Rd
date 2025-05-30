@@ -47,11 +47,11 @@ continuous.test (name,
 \examples{
 data(prostate)
 
-hosp=clinical[,"Hospital"]
-gender=clinical[,"Gender"]
-GS=clinical[,"Gleason score"]
-BMI=clinical[,"BMI"]
-age=clinical[,"Age"]
+hosp=prostate[,"Hospital"]
+gender=prostate[,"Gender"]
+GS=prostate[,"Gleason score"]
+BMI=prostate[,"BMI"]
+age=prostate[,"Age"]
 
 A=categorical.test("Gender",gender,hosp)
 B=categorical.test("Gleason score",GS,hosp)
