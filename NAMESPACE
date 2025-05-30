@@ -1,15 +1,13 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
-
-
-
 importFrom("graphics", "plot", "points")
 importFrom("stats", "shapiro.test", "aov", "summary.aov", "t.test", "p.adjust", "fisher.test", "prcomp","aggregate","quantile", "wilcox.test","cmdscale", "as.dist", "dist", "kmeans", "kruskal.test","median", "pnorm", "rnorm", "runif", "sd", "var","cor.test")
 importFrom("minerva", "mine")
   
 
-exportPattern(another,vertex,as.data.matrix,intersect,
-              swissroll,normalization,scaling,
+exportPattern(as.data.matrix,
+              intersect,
               frequency_matching,
-              txtsummary,continuous.test,
-              categorical.test,correlation.test,multi_analysis,kabsch)
+              txtsummary,
+              continuous.test,
+              categorical.test,
+              correlation.test,
+              multi_analysis)
