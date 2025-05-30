@@ -28,10 +28,10 @@ multi_analysis  (data,
   \seealso{\code{\link{categorical.test}},\code{\link{continuous.test}},\code{\link{correlation.test}}, \code{\link{txtsummary}}}
 
 \examples{
-data(clinical)
+data(prostate)
 
 
-multi_analysis(clinical[,c("BMI","Age")],clinical[,"Hospital"],FUN="continuous.test")
+multi_analysis(prostate[,c("BMI","Age")],prostate[,"Hospital"],FUN="continuous.test")
 
 }
 \keyword{multi_analysis}
