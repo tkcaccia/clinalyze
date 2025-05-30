@@ -10,6 +10,7 @@
 continuous.test (name,
                  x,    
                  y,
+                 center = c("median", "mean"),
                  digits = 3,
                  scientific = FALSE, 
                  range = c("IQR","95\%CI"), 
@@ -23,6 +24,7 @@ continuous.test (name,
   \item{name}{the name of the feature.}
   \item{x}{the information to summarize.}
   \item{y}{the classification of the cohort.}
+  \item{center}{xxxx.}
   \item{digits}{how many significant digits are to be used.}
   \item{scientific}{either a logical specifying whether result should be encoded in scientific format.}
   \item{range}{the range to be visualized.}
