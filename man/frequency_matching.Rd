@@ -55,9 +55,9 @@ rbind(A,B,C,D)
 # The order is important. Right is more important than left in the vector
 # So, Ethnicity will be more important than Age
 var=c("Age","BMI","Gleason score")
-t=frequency_matching(clinical[,var],clinical[,"Hospital"],times=1)
+t=frequency_matching(prostate[,var],prostate[,"Hospital"],times=1)
 
-newdata=clinical[t$selection,]
+newdata=prostate[t$selection,]
 
 hosp.new=newdata[,"Hospital"]
 gender.new=newdata[,"Gender"]
