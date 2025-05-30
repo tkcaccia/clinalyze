@@ -7,8 +7,11 @@
 \description{Summarization of a numeric vector.}
 
 \usage{
-txtsummary (x, f = c("median", "mean"), digits = 0, scientific = FALSE, range = c("IQR", "95%CI", "range", "sd"))
-
+txtsummary(x,
+           f = c("median", "mean"),
+           digits = 0,
+           scientific = FALSE,
+           range = c("IQR", "95\%CI", "range", "sd"))
 }
 
 \arguments{
