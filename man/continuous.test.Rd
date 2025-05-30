@@ -13,7 +13,7 @@ continuous.test (name,
                  center = c("median", "mean"),
                  digits = 3,
                  scientific = FALSE, 
-                 range = c("IQR","95\%CI"), 
+                 range = c("IQR", "95%CI", "range", "sd")
                  logchange = FALSE,
                  pos=2, 
                  method=c("non-parametric","parametric"),
