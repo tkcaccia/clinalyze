@@ -3,11 +3,11 @@ importFrom("stats", "shapiro.test", "aov", "summary.aov", "t.test", "p.adjust", 
 importFrom("minerva", "mine")
 importFrom("Matrix", "Matrix")
 
-exportPattern(as.data.matrix,
-              intersect,
-              frequency_matching,
-              txtsummary,
-              continuous.test,
-              categorical.test,
-              correlation.test,
-              multi_analysis)
+export(as.data.matrix)
+export(intersect)
+export(frequency_matching)
+export(txtsummary)
+export(continuous.test)
+export(categorical.test)
+export(correlation.test)
+export(multi_analysis)
