@@ -60,14 +60,6 @@ data <- data.frame(
 )
 ```
 
-# Function: `as.data.matrix`
-
-Converts a character or factor matrix into a numeric matrix while preserving row and column names.
-
-```{r}
-numeric_matrix <- as.data.matrix(data[, c("Age", "BMI")])
-head(numeric_matrix)
-```
 
 # Function: `txtsummary`
 
