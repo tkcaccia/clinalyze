@@ -190,47 +190,53 @@ function (x, f = c("median", "mean"), digits = 0, scientific = FALSE,
 
                               
 #-----for categorical data 
-categorical.test = 
-  function (name, x, y,total.column=FALSE,...) 
-  {
-
-      x[x==""]=NA
-    
-    y = as.factor(y)
-    nn = length(levels(y))
-    t0 = table(x, y)
-    ta = cbind(t0, as.matrix(table(x)))
-    tb = sprintf("%.1f", t(t(ta)/colSums(ta)) * 100)
-    tc = matrix(paste(ta, " (", tb, ")", sep = ""), 
-                ncol = nn + 1)
-    tc[, c(colSums(t0), -1) == 0] = "-"
-    v = NULL
-    if (nrow(t0) == 1) {
-      p.value = NA
-      v[nn + 3] = ""
-    }
-    else {
-      p.value = fisher.test(t0, workspace = 10^7,...)$p.value
-      v[nn + 3] = format(p.value, digits = 3, scientific = TRUE)
-    }
-    v[1] = name
-    group = paste("   ", rownames(ta), ", n (%)", 
-                  sep = "")
-    cc = cbind(group, tc, rep(NA, length(group)))
-    cc = rbind(v, cc)
-    #tet=table(y)
-    #te=paste(c(colnames(t0),"Total")," (n=",c(tet,sum(tet)),")",sep="")
-    te=c(colnames(t0),"Total")
-    colnames(cc) = c("Feature", te, 
-                     "p-value")
-    cc[is.na(cc)] = ""
-    if(!total.column){
-      cc=cc[,-(nn+2)]
-    }
-    attr(cc,"p-value")=p.value
-    attr(cc, "shapiro test")=NA
-    return(cc)
+categorical.test =
+function (name, x, y, total.column = FALSE, remove = "", ...) 
+{
+  if (!is.null(remove)) {
+    x[x == remove] = NA
   }
+  y = as.factor(y)
+  nn = length(levels(y))
+  t0 = table(x, y)
+  ta = cbind(t0, as.matrix(table(x)))
+  tb = sprintf("%.1f", t(t(ta)/colSums(ta)) * 100)
+  tc = matrix(paste(ta, " (", tb, ")", sep = ""), ncol = nn + 
+                1)
+  tc[, c(colSums(t0), -1) == 0] = "-"
+  v = NULL
+  if (nrow(t0) == 1) {
+    p.value = NA
+    v[nn + 3] = ""
+  }
+  else {
+    if(is.ordered(x) | is.ordered(y)){
+
+      if(length(levels(y))>2 & length(levels(x))>2){
+        p.value = cor.test(as.numeric(x),as.numeric(y),method="spearman")$p.value
+      } else{ 
+        p.value = jonckheere.test(as.numeric(x), as.numeric(y), alternative = "two.sided", nperm = 10000)$p.value
+      }
+    }else{
+      p.value = fisher.test(t0, workspace = 10^7, ...)$p.value
+    }
+    v[nn + 3] = format(p.value, digits = 3, scientific = TRUE)
+  }
+  v[1] = name
+  group = paste("   ", rownames(ta), ", n (%)", sep = "")
+  cc = cbind(group, tc, rep(NA, length(group)))
+  cc = rbind(v, cc)
+  te = c(colnames(t0), "Total")
+  colnames(cc) = c("Feature", te, "p-value")
+  cc[is.na(cc)] = ""
+  if (!total.column) {
+    cc = cc[, -(nn + 2)]
+  }
+  attr(cc, "p-value") = p.value
+  attr(cc, "shapiro test") = NA
+  return(cc)
+}
+
 
 
 
@@ -413,4 +419,56 @@ multi_test = function(x, labels, ...){
   attr(da,"p-value")=pval
   attr(da,"shapiro test")=shapiro
   return(da)
+}
+
+
+
+
+
+# Define unions for allowed types
+setClassUnion("matrixOrNULL", c("data.frame","matrix", "NULL"))
+setClassUnion("numericOrFactor", c("numeric", "factor"))
+
+# Define the S4 class
+setClass(
+  "clinical.table",
+  slots = c(x = "matrixOrNULL", 
+            y = "numericOrFactor",
+            total.column = "logical"),
+  validity = function(object) {
+    if (!is.null(object@x)) {
+      if (!is.numeric(object@x)) {
+        return("Slot 'x' must be a numeric matrix or NULL.")
+      }
+      if (nrow(object@x) != length(object@y)) {
+        return("Number of rows in 'x' must match length of 'y'.")
+      }
+    }
+    TRUE
+  }
+)
+
+# Show only slot x
+setMethod("show", "clinical.table", function(object) {
+  print(object@x)
+})
+
+
+initialization = function(y, total.column = FALSE){
+  ma <- new("clinical.table",
+            x = NULL,
+            y = y,
+            total.column = total.column)
+  ma
+}
+
+add_analysis = function(ma,name,x){
+  if(is.numeric(x)){
+    temp=continuous.test(name,x,ma@y,total.column = ma@total.column)
+  }
+  if(is.factor(x)){
+    temp=categorical.test(name,x,ma@y,total.column = ma@total.column)
+  }
+  ma@x=rbind(ma@x,as.data.frame(temp))
+  ma
 }
