@@ -79,7 +79,6 @@ This is particularly useful when preparing reports or markdown documents where i
 ### Example with the `prostate` dataset
 
 ```{r}
-data(prostate)
 # Summarize Age using mean and IQR
 txtsummary(prostate$Age, f = "mean", digits = 2, range = "IQR")
 ```
@@ -106,13 +105,12 @@ The `continuous.test()` function allows comparison of a continuous variable acro
 ### Example 1: Wilcoxon Rank-Sum Test (2 Groups, Non-Parametric)
 
 ```{r}
-data(prostate)
 
 # Non-parametric comparison using Wilcoxon test
 result_wilcox <- continuous.test(
-  feature = "Age",
-  values = prostate$Age,
-  group = prostate$Hospital,
+  name = "Age",
+  x = prostate$Age,
+  y = prostate$Hospital,
   center = "median",
   range = "IQR",
   method = "non-parametric"
@@ -123,13 +121,11 @@ print(result_wilcox)
 ### Example 1: Wilcoxon Rank-Sum Test (2 Groups, Non-Parametric)
 
 ```{r}
-data(prostate)
-
 # Non-parametric comparison using Wilcoxon test
 result_wilcox <- continuous.test(
-  feature = "Age",
-  values = prostate$Age,
-  group = prostate$Hospital,
+  name = "Age",
+  x = prostate$Age,
+  y = prostate$Hospital,
   center = "median",
   range = "IQR",
   method = "non-parametric"
@@ -162,9 +158,9 @@ The output is suitable for inclusion in summary tables or reports.
 ```{r}
 # Compare Gender (unordered factor) across hospitals
 categorical_test_result <- categorical.test(
-  feature = "Gender",
-  values = prostate$Gender,
-  group = prostate$Hospital
+  name = "Gender",
+  x = prostate$Gender,
+  y = prostate$Hospital
 )
 
 print(categorical_test_result)
@@ -176,9 +172,9 @@ print(categorical_test_result)
 ```{r}
 # Compare Gleason score (ordered factor) across hospitals
 categorical_test_result <- categorical.test(
-  feature = "Gleason",
-  values = prostate$Gleason,
-  group = prostate$Hospital
+  name = "Gleason",
+  x = prostate$Gleason,
+  y = prostate$Hospital
 )
 
 print(categorical_test_result)
@@ -226,8 +222,6 @@ intersect(v1, v2, v3)
 Matches samples across classes (e.g., control vs case) by discretizing numeric features into bins and stratifying selection.
 
 ```{r}
-data(prostate)
-
 hosp=prostate[,"Hospital"]
 gender=prostate[,"Gender"]
 GS=prostate[,"Gleason score"]
