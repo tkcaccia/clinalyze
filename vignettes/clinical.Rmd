@@ -64,7 +64,7 @@ The dataset includes the following variables:
 
 To load the dataset:
 
-```{r}
+```{r load-data, message=FALSE, warning=FALSE}
 data(prostate)
 ```
 
