@@ -1,11 +1,11 @@
 Package: clinical
 Version: 1.0
 Date: 2025-05-30
-Authors@R: c(person("Stefano", "Cacciatore", role = c("aut", "trl", "cre"),email = "tkcaccia@gmail.com", comment = c(ORCID = "0000-0001-7052-7156")))
+Authors@R: c(person("Stefano", "Cacciatore", role = c("aut", "trl", "cre"), email = "tkcaccia@gmail.com", comment = c(ORCID = "0000-0001-7052-7156")))
 Maintainer: Stefano Cacciatore <tkcaccia@gmail.com>
 Title: Analysis of clinical data
-Description: A collection of tools to analyze easily clinical data.
-Depends: R (>= 2.10.0), stats, minerva, Matrix, clinfun
+Description: A collection of tools to analyze clinical data easily.
+Depends: R (>= 3.5.0), stats, minerva, Matrix, clinfun
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 SuggestsNote: No suggestions
