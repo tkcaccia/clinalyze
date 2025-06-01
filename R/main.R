@@ -146,7 +146,16 @@ multi_analysis =
 
 
 
-
+#' Textual Summary of Numeric Data
+#'
+#' Produces a formatted string summarizing center and spread of a numeric variable.
+#' @param x A numeric vector.
+#' @param f Summary function: "mean" or "median".
+#' @param digits Number of digits to round to.
+#' @param scientific Logical; whether to use scientific notation.
+#' @param range Type of dispersion: "IQR", "95%CI", "range", or "sd".
+#' @return A string with center and variability summary.
+#' @export
 txtsummary =
 function (x, f = c("median", "mean"), digits = 0, scientific = FALSE, 
           range = c("IQR", "95%CI", "range", "sd")) 
