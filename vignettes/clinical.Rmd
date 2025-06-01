@@ -131,7 +131,7 @@ intersect(v1, v2, v3)
 Matches samples across classes (e.g., control vs case) by discretizing numeric features into bins and stratifying selection.
 
 ```{r}
-
+data(prostate)
 
 hosp=prostate[,"Hospital"]
 gender=prostate[,"Gender"]
