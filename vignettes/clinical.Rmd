@@ -38,7 +38,6 @@ All versions downloadable from CRAN have been built using R version, R.3.2.3. Th
 To load the package, enter the following instruction in your R session:
 
 ```{r setup, include = FALSE}
-#knitr::opts_chunk$set(echo = TRUE)
 library(clinical)  # <- THIS IS CRITICAL
 ```
 
@@ -132,8 +131,70 @@ intersect(v1, v2, v3)
 Matches samples across classes (e.g., control vs case) by discretizing numeric features into bins and stratifying selection.
 
 ```{r}
-match_result <- frequency_matching(data[, c("Age", "BMI")], label = data$Hospital)
-head(match_result$data)
+
+
+hosp=prostate[,"Hospital"]
+gender=prostate[,"Gender"]
+GS=prostate[,"Gleason score"]
+BMI=prostate[,"BMI"]
+age=prostate[,"Age"]
+
+A=categorical.test("Gender",gender,hosp)
+B=categorical.test("Gleason score",GS,hosp)
+
+C=continuous.test("BMI",BMI,hosp,digits=2)
+D=continuous.test("Age",age,hosp,digits=1)
+
+# Analysis without matching
+rbind(A,B,C,D)
+
+
+
+# The order is important. Right is more important than left in the vector
+# So, Ethnicity will be more important than Age
+var=c("Age","BMI","Gleason score")
+data.categorized=prostate[,var]
+
+# Extract the Age vector
+x <- data.categorized[["Age"]]
+
+# Compute quantiles (0%, 25%, 50%, 75%, 100%) with NA handling
+breaks <- quantile(x, probs = c(0, 0.25, 0.5, 0.75, 1), na.rm = TRUE)
+
+# Apply the cut and update the Age column with labeled bins
+data.categorized[["Age"]] <- cut(x, breaks = breaks, include.lowest = TRUE)
+
+# Extract the Age vector
+x <- data.categorized[["BMI"]]
+
+# Compute quantiles (0%, 25%, 50%, 75%, 100%) with NA handling
+breaks <- quantile(x, probs = c(0, 0.25, 0.5, 0.75, 1), na.rm = TRUE)
+
+# Apply the cut and update the Age column with labeled bins
+data.categorized[["BMI"]] <- cut(x, breaks = breaks, include.lowest = TRUE)
+
+times=c(1,1)
+names(times)=c("Hospital A","Hospital B")
+t=frequency_matching(data.categorized,prostate[,"Hospital"],times=times)
+
+
+
+newdata=prostate[t$selection,]
+
+hosp.new=newdata[,"Hospital"]
+gender.new=newdata[,"Gender"]
+GS.new=newdata[,"Gleason score"]
+BMI.new=newdata[,"BMI"]
+age.new=newdata[,"Age"]
+
+A=categorical.test("Gender",gender.new,hosp.new)
+B=categorical.test("Gleason score",GS.new,hosp.new)
+
+C=continuous.test("BMI",BMI.new,hosp.new,digits=2)
+D=continuous.test("Age",age.new,hosp.new,digits=1)
+
+# Analysis with matching
+rbind(A,B,C,D)
 ```
 
 # Conclusion
