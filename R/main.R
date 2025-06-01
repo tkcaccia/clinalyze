@@ -189,11 +189,8 @@ function (x, f = c("median", "mean"), digits = 0, scientific = FALSE,
                               
 #-----for categorical data 
 categorical.test =
-function (name, x, y, total.column = FALSE, remove = "", ...) 
-{
-  if (!is.null(remove)) {
-    x[x == remove] = NA
-  }
+function (name, x, y, total.column = FALSE,  ...) 
+{  
   y = as.factor(y)
   nn = length(levels(y))
   t0 = table(x, y)
