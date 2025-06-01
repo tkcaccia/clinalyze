@@ -66,6 +66,7 @@ To load the dataset:
 
 ```{r load-data, message=FALSE, warning=FALSE}
 data(prostate)
+head(prostate)
 ```
 
 
