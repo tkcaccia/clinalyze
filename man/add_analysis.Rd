@@ -5,7 +5,7 @@
   This function appends the results of an analysis to a clinical object.
 }
 \usage{
-add_analysis(object, name, results)
+add_analysis(ma, name, x)
 }
 \arguments{
   \item{object}{A clinical object to which results will be attached.}
@@ -16,7 +16,9 @@ add_analysis(object, name, results)
   Returns the updated clinical object with the new analysis appended.
 }
 \examples{
-data(clinical)
-clinical <- add_analysis(clinical, "PCA", pca_results)
+y <- factor(c("A", "B", "A", "B"))
+ma <- initialization(y)
+x <- c(10, 12, 11, 14)
+ma <- add_analysis(ma, "ExampleVar", x)
 }
 \author{Stefano Cacciatore}
