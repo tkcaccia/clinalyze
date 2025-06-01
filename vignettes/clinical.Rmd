@@ -78,6 +78,7 @@ This is particularly useful when preparing reports or markdown documents where i
 ### Example with the `prostate` dataset
 
 ```{r}
+data(prostate)
 # Summarize Age using mean and IQR
 txtsummary(prostate$Age, f = "mean", digits = 2, range = "IQR")
 ```
