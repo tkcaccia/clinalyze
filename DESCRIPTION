@@ -5,7 +5,7 @@ Authors@R: c(person("Stefano", "Cacciatore", role = c("aut", "trl", "cre"), emai
 Maintainer: Stefano Cacciatore <tkcaccia@gmail.com>
 Title: Analysis of clinical data
 Description: A collection of tools to analyze clinical data easily.
-Depends: R (>= 3.5.0), stats, minerva, Matrix, clinfun
+Depends: R (>= 3.5.0), stats, minerva, Matrix, clinfun, methods
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 SuggestsNote: No suggestions
