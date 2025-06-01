@@ -26,19 +26,19 @@ The `clinical` package is designed to facilitate exploratory data analysis and s
 
 ### 2.1 Installation via CRAN
 
-The R package clinical  is part of the Comprehensive R Archive Network (CRAN)^[https://cran.r-project.org/]. The simplest way to install the package is to enter the following command into your R session: `install.packages("clinical")`. We suggest to install the R package `rgl` for the data visualization in 3D interactive plots.
+The R package clinical  is part of the Comprehensive R Archive Network (CRAN)^[https://cran.r-project.org/]. The simplest way to install the package is to enter the following command into your R session: `install.packages("clinical")`. 
 
 
 ### 2.3 Compatibility issues
 
-All versions downloadable from CRAN have been built using R version, R.3.2.3. The package should work without major issues on R versions > 3.0.0.
+All versions downloadable from CRAN have been built using R version, R.3.2.3. The package should work without major issues on R versions > 3.5.0.
 
 ## 3  Getting Started 
 
 To load the package, enter the following instruction in your R session:
 
 ```{r setup, include = FALSE}
-library(clinical)  # <- THIS IS CRITICAL
+library(clinical)  
 ```
 
 
@@ -49,53 +49,146 @@ The package includes both a user manual (this document) and a reference manual (
 
 
 
-# Simulated Data
+# Prostate Data
+
+The `clinical` package includes a simulated dataset representing clinical information from patients diagnosed with prostate cancer. This dataset is provided as a `data.frame` and is intended for demonstration and instructional purposes.
+
+The dataset includes the following variables:
+
+- **Hospital**: Factor indicating the hospital where the patient was treated.
+- **Gender**: Factor indicating the patient's gender.
+- **Gleason**: Ordered factor representing the Gleason score assigned to the tumor.
+- **BMI**: Numeric value for the patient's Body Mass Index.
+- **Age**: Numeric value for the patient's age (in years).
+- **Hypertension**: Factor indicating whether the patient has hypertension.
+
+To load the dataset:
 
 ```{r}
-set.seed(123)
-n <- 100
-data <- data.frame(
-  Age = rnorm(n, mean = 60, sd = 10),
-  BMI = rnorm(n, mean = 25, sd = 4),
-  Gender = sample(c("Male", "Female"), n, replace = TRUE),
-  Hospital = sample(c("A", "B"), n, replace = TRUE),
-  Diagnosis = sample(c("Low", "Medium", "High"), n, replace = TRUE)
-)
+data(prostate)
 ```
 
 
 # Function: `txtsummary`
 
-Returns a textual summary of a numeric vector using either the mean or median and a measure of variability.
+The `txtsummary()` function provides a concise textual summary of a numeric variable using either the **mean** or **median**, along with a measure of variability such as the **interquartile range (IQR)**, **95% confidence interval**, **standard deviation**, or **full range**.
+
+This is particularly useful when preparing reports or markdown documents where inline descriptive statistics are needed in a clean format.
+
+### Example with the `prostate` dataset
 
 ```{r}
-txtsummary(data$Age, f = "mean", digits = 2, range = "IQR")
+# Summarize Age using mean and IQR
+txtsummary(prostate$Age, f = "mean", digits = 2, range = "IQR")
 ```
 
 # Function: `continuous.test`
 
-Performs a statistical comparison of a continuous variable across groups.
+## Comparing Continuous Variables Across Groups
+
+The `continuous.test()` function allows comparison of a continuous variable across groups. It returns a formatted summary of the data (e.g., mean and standard deviation or median and IQR) for each group, along with a p-value from a statistical test. This is useful for generating clean, publication-ready result tables.
+
+### Function Parameters
+
+- `feature`: A string indicating the name of the variable.
+- `values`: A numeric vector containing the continuous data.
+- `group`: A factor or character vector indicating group membership.
+- `center`: The measure of central tendency, either `"mean"` or `"median"`.
+- `range`: A measure of variability: `"sd"`, `"IQR"`, `"range"`, or `"95%CI"`.
+- `method`: Statistical method to use: `"parametric"` or `"non-parametric"`. The function uses:
+  - t-test (2 groups) or ANOVA (>2 groups) for parametric
+  - Wilcoxon (2 groups) or Kruskal-Wallis (>2 groups) for non-parametric
+
+---
+
+### Example 1: Wilcoxon Rank-Sum Test (2 Groups, Non-Parametric)
 
 ```{r}
-continuous_test_result <- continuous.test("Age", data$Age, data$Hospital, center = "mean", range = "sd")
-print(continuous_test_result)
+data(prostate)
+
+# Non-parametric comparison using Wilcoxon test
+result_wilcox <- continuous.test(
+  feature = "Age",
+  values = prostate$Age,
+  group = prostate$Hospital,
+  center = "median",
+  range = "IQR",
+  method = "non-parametric"
+)
+
+print(result_wilcox)
+```
+### Example 1: Wilcoxon Rank-Sum Test (2 Groups, Non-Parametric)
+
+```{r}
+data(prostate)
+
+# Non-parametric comparison using Wilcoxon test
+result_wilcox <- continuous.test(
+  feature = "Age",
+  values = prostate$Age,
+  group = prostate$Hospital,
+  center = "median",
+  range = "IQR",
+  method = "non-parametric"
+)
+
+print(result_wilcox)
 ```
 
 # Function: `categorical.test`
 
-Performs a Fisher's exact test or chi-square test on a categorical variable across groups and returns formatted output.
+## Comparing Categorical Variables Across Groups
+
+The `categorical.test()` function compares categorical variables across groups and returns a formatted summary table with the test result. It automatically selects the appropriate statistical test depending on whether the categorical variable is **ordered** or not:
+
+- **Unordered factor**: Uses **Fisher's exact test** (2 groups) or **Chi-squared test** (>2 groups).
+- **Ordered factor**: Uses the **Jonckheere–Terpstra test** to detect monotonic trends across ordered categories.
+
+The output is suitable for inclusion in summary tables or reports.
+
+### Function Parameters
+
+- `feature`: A string indicating the name of the categorical variable.
+- `values`: A factor or ordered factor representing the categorical data.
+- `group`: A factor or character vector indicating group membership.
+
+---
+
+### Example 1: Unordered Categorical Variable (Fisher's Exact Test)
 
 ```{r}
-categorical_test_result <- categorical.test("Gender", data$Gender, data$Hospital)
+# Compare Gender (unordered factor) across hospitals
+categorical_test_result <- categorical.test(
+  feature = "Gender",
+  values = prostate$Gender,
+  group = prostate$Hospital
+)
+
 print(categorical_test_result)
 ```
+
+
+### Example 2: Ordered Categorical Variable (Jonckheere–Terpstra Test)
+
+```{r}
+# Compare Gleason score (ordered factor) across hospitals
+categorical_test_result <- categorical.test(
+  feature = "Gleason",
+  values = prostate$Gleason,
+  group = prostate$Hospital
+)
+
+print(categorical_test_result)
+```
+
 
 # Function: `correlation.test`
 
 Computes Pearson, Spearman, or MINE correlation between two numeric vectors.
 
 ```{r}
-correlation_result <- correlation.test(data$Age, data$BMI, method = "spearman", name = "Age vs BMI")
+correlation_result <- correlation.test(prostate$Age, prostate$BMI, method = "spearman", name = "Age vs BMI")
 print(correlation_result)
 ```
 
@@ -104,12 +197,12 @@ print(correlation_result)
 Applies a test (continuous or correlation) across multiple features of a dataset.
 
 ```{r}
-multi_cont <- multi_analysis(data[, c("Age", "BMI")], data$Hospital, FUN = "continuous.test")
+multi_cont <- multi_analysis(prostate[, c("Age", "BMI")], prostate$Hospital, FUN = "continuous.test")
 print(multi_cont)
 ```
 
 ```{r}
-multi_corr <- multi_analysis(data[, c("Age", "BMI")], data$BMI, FUN = "correlation.test")
+multi_corr <- multi_analysis(prostate[, c("Age", "BMI")], prostate$BMI, FUN = "correlation.test")
 print(multi_corr)
 ```
 
