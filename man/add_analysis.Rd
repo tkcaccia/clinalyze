@@ -8,9 +8,9 @@
 add_analysis(ma, name, x)
 }
 \arguments{
-  \item{object}{A clinical object to which results will be attached.}
+  \item{ma}{A clinical object to which results will be attached.}
   \item{name}{The name (string) of the analysis.}
-  \item{results}{The result object (e.g., data frame, matrix) to attach.}
+  \item{x}{The result object (e.g., data frame, matrix) to attach.}
 }
 \value{
   Returns the updated clinical object with the new analysis appended.
