@@ -37,7 +37,11 @@ All versions downloadable from CRAN have been built using R version, R.3.2.3. Th
 
 To load the package, enter the following instruction in your R session:
 
-    library("clinical")
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(clinical)  # <- THIS IS CRITICAL
+```
+
 
 If this command terminates without any error messages, you can be sure that the package has been installed successfully. The clinical package is now ready for use.
 
