@@ -3,6 +3,7 @@ importFrom("stats", "shapiro.test", "aov", "summary.aov", "t.test", "p.adjust", 
 importFrom("minerva", "mine")
 importFrom("Matrix", "Matrix")
 importFrom("methods", "new")
+importFrom("clinfun","jonckheere.test")
 
 export(as.data.matrix)
 export(intersect)
