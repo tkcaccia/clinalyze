@@ -114,14 +114,6 @@ multi_corr <- multi_analysis(data[, c("Age", "BMI")], data$BMI, FUN = "correlati
 print(multi_corr)
 ```
 
-# Function: `multi_test`
-
-Runs either `continuous.test` or `categorical.test` automatically on each column depending on the data type.
-
-```{r}
-multi_test_result <- multi_test(data[, c("Age", "BMI", "Gender")], data$Hospital)
-print(multi_test_result)
-```
 
 # Function: `intersect`
 
