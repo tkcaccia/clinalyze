@@ -16,9 +16,14 @@ add_analysis(ma, name, x)
   Returns the updated clinical object with the new analysis appended.
 }
 \examples{
-y <- factor(c("A", "B", "A", "B"))
-ma <- initialization(y)
-x <- c(10, 12, 11, 14)
-ma <- add_analysis(ma, "ExampleVar", x)
+data(prostate)
+
+
+ma=initialization(prostate[,"Hospital"])
+ma=add_analysis(ma,"Gender",prostate[,"Gender"])
+ma=add_analysis(ma,"Gleason score",prostate[,"Gleason score"])
+ma=add_analysis(ma,"BMI",prostate[,"BMI"])
+ma=add_analysis(ma,"Age",prostate[,"Age"])
+ma
 }
 \author{Stefano Cacciatore}
