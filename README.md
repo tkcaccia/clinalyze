@@ -3,6 +3,6 @@
 
 ```
 library(devtools)
-install_github("tkcaccia/clinical")
+install_github("tkcaccia/clinalyze")
 
 ```
