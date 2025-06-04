@@ -1,6 +1,6 @@
 Package: clinical
 Version: 0.1
-Date: 2025-06-02
+Date: 2025-06-04
 Authors@R: c(person("Stefano", "Cacciatore", role = c("aut", "trl", "cre"), email = "tkcaccia@gmail.com", comment = c(ORCID = "0000-0001-7052-7156")))
 Maintainer: Stefano Cacciatore <tkcaccia@gmail.com>
 Title: Clinical Metadata Exploration and Feature Matching
